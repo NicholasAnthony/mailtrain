@@ -1,0 +1,48 @@
+<ol class="breadcrumb">
+    <li><a href="/">{{#translate}}Home{{/translate}}</a></li>
+    <li><a href="/companies/">{{#translate}}Companies{{/translate}}</a></li>
+    <li><a href="/companies/view/{{company.id}}">{{company.name}}</a></li>
+    <li class="active">{{#translate}}Import status{{/translate}}</li>
+</ol>
+
+<h2>{{company.name}} <small>{{#translate}}Failed addresses{{/translate}}</small> <a class="btn btn-default btn-xs" href="/companies/view/{{company.id}}" role="button"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> {{#translate}}Back to company{{/translate}}</a></h2>
+
+<hr>
+
+<div class="well">
+    {{#translate}}Role-based addresses like postmaster@example.com are blocked when importing. Subscribers with role-based email addresses can join your company using the subscription form{{/translate}} (<a href="/subscription/{{company.cid}}">{{#translate}}see here{{/translate}}</a>).
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover display nowrap" width="100%">
+        <thead>
+            <th class="col-md-1">
+                #
+            </th>
+            <th>
+                {{#translate}}Address{{/translate}}
+            </th>
+            <th>
+                {{#translate}}Fail reason{{/translate}}
+            </th>
+        </thead>
+        {{#if rows}}
+            <tbody>
+                {{#each rows}}
+                    <tr>
+                        <th scope="row">
+                            {{index}}
+                        </th>
+                        <td>
+                            <a href="mailto:{{email}}">{{email}}</a>
+                            </a>
+                        </td>
+                        <td>
+                            <span class="text-danger">{{reason}}</span>
+                        </td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        {{/if}}
+    </table>
+</div>

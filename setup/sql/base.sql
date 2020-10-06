@@ -195,6 +195,22 @@ CREATE TABLE `templates` (
   KEY `name` (`name`(191))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE `companies` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `cid` varchar(255) CHARACTER SET ascii NOT NULL,
+  `name` varchar(255) NOT NULL DEFAULT '',
+  `description` text,
+  `url` varchar(255) NOT NULL DEFAULT '',
+  `lists` int(11) unsigned DEFAULT '0',
+  `feeds` int(11) unsigned DEFAULT '0',
+  `users` int(11) unsigned DEFAULT '0',
+  `campaigns` int(11) unsigned DEFAULT '0',
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `cid` (`cid`),
+  KEY `name` (`name`(191))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE `users` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(255) NOT NULL DEFAULT '',

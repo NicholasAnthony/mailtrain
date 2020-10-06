@@ -1,6 +1,7 @@
 SET UNIQUE_CHECKS=0;
 SET FOREIGN_KEY_CHECKS=0;
 
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `attachments` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `campaign` int(11) unsigned NOT NULL,
@@ -13,6 +14,12 @@ CREATE TABLE `attachments` (
   KEY `campaign` (`campaign`),
   CONSTRAINT `attachments_ibfk_1` FOREIGN KEY (`campaign`) REFERENCES `campaigns` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `blacklist` (
+  `email` varchar(191) NOT NULL,
+  PRIMARY KEY (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `campaign` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `list` int(11) unsigned NOT NULL,
@@ -30,6 +37,7 @@ CREATE TABLE `campaign` (
   KEY `status_index` (`status`),
   KEY `subscription_index` (`subscription`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `campaign_tracker` (
   `list` int(11) unsigned NOT NULL,
   `subscriber` int(11) unsigned NOT NULL,
@@ -42,6 +50,7 @@ CREATE TABLE `campaign_tracker` (
   PRIMARY KEY (`list`,`subscriber`,`link`),
   KEY `created_index` (`created`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `campaigns` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `cid` varchar(255) CHARACTER SET ascii NOT NULL,
@@ -61,20 +70,23 @@ CREATE TABLE `campaigns` (
   `address` varchar(255) DEFAULT '',
   `reply_to` varchar(255) DEFAULT '',
   `subject` varchar(255) DEFAULT '',
+  `unsubscribe` varchar(255) NOT NULL DEFAULT '',
   `html` longtext,
   `html_prepared` longtext,
   `text` longtext,
   `status` tinyint(4) unsigned NOT NULL DEFAULT '1',
-  `tracking_disabled` tinyint(4) unsigned NOT NULL DEFAULT '0',
   `scheduled` timestamp NULL DEFAULT NULL,
   `status_change` timestamp NULL DEFAULT NULL,
   `delivered` int(11) unsigned NOT NULL DEFAULT '0',
+  `blacklisted` int(11) unsigned NOT NULL DEFAULT '0',
   `opened` int(11) unsigned NOT NULL DEFAULT '0',
   `clicks` int(11) unsigned NOT NULL DEFAULT '0',
   `unsubscribed` int(11) unsigned NOT NULL DEFAULT '0',
   `bounced` int(1) unsigned NOT NULL DEFAULT '0',
   `complained` int(1) unsigned NOT NULL DEFAULT '0',
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `open_tracking_disabled` tinyint(4) unsigned NOT NULL DEFAULT '0',
+  `click_tracking_disabled` tinyint(4) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `cid` (`cid`),
   KEY `name` (`name`(191)),
@@ -84,12 +96,29 @@ CREATE TABLE `campaigns` (
   KEY `parent_index` (`parent`),
   KEY `check_index` (`last_check`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `companies` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `cid` varchar(255) CHARACTER SET ascii NOT NULL,
+  `name` varchar(255) NOT NULL DEFAULT '',
+  `description` text,
+  `url` varchar(255) NOT NULL DEFAULT '',
+  `lists` int(11) unsigned DEFAULT '0',
+  `feeds` int(11) unsigned DEFAULT '0',
+  `users` int(11) unsigned DEFAULT '0',
+  `campaigns` int(11) unsigned DEFAULT '0',
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `cid` (`cid`),
+  KEY `name` (`name`(191))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `confirmations` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `cid` varchar(255) CHARACTER SET ascii NOT NULL,
   `list` int(11) unsigned NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `opt_in_ip` varchar(100) DEFAULT NULL,
+  `action` varchar(100) NOT NULL,
+  `ip` varchar(100) DEFAULT NULL,
   `data` text NOT NULL,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -97,10 +126,12 @@ CREATE TABLE `confirmations` (
   KEY `list` (`list`),
   CONSTRAINT `confirmations_ibfk_1` FOREIGN KEY (`list`) REFERENCES `lists` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `custom_fields` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `list` int(11) unsigned NOT NULL,
   `name` varchar(255) DEFAULT '',
+  `description` text,
   `key` varchar(100) CHARACTER SET ascii NOT NULL,
   `default_value` varchar(255) DEFAULT NULL,
   `type` varchar(255) CHARACTER SET ascii NOT NULL DEFAULT '',
@@ -114,6 +145,7 @@ CREATE TABLE `custom_fields` (
   KEY `list_2` (`list`),
   CONSTRAINT `custom_fields_ibfk_1` FOREIGN KEY (`list`) REFERENCES `lists` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `custom_forms` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `list` int(11) unsigned NOT NULL,
@@ -128,6 +160,7 @@ CREATE TABLE `custom_forms` (
   KEY `list` (`list`),
   CONSTRAINT `custom_forms_ibfk_1` FOREIGN KEY (`list`) REFERENCES `lists` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `custom_forms_data` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `form` int(11) unsigned NOT NULL,
@@ -137,6 +170,7 @@ CREATE TABLE `custom_forms_data` (
   KEY `form` (`form`),
   CONSTRAINT `custom_forms_data_ibfk_1` FOREIGN KEY (`form`) REFERENCES `custom_forms` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `import_failed` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `import` int(11) unsigned NOT NULL,
@@ -147,6 +181,7 @@ CREATE TABLE `import_failed` (
   KEY `import` (`import`),
   CONSTRAINT `import_failed_ibfk_1` FOREIGN KEY (`import`) REFERENCES `importer` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `importer` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `list` int(11) unsigned NOT NULL,
@@ -167,6 +202,7 @@ CREATE TABLE `importer` (
   KEY `list` (`list`),
   CONSTRAINT `importer_ibfk_1` FOREIGN KEY (`list`) REFERENCES `lists` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `links` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `cid` varchar(255) CHARACTER SET ascii NOT NULL DEFAULT '',
@@ -179,6 +215,7 @@ CREATE TABLE `links` (
   KEY `campaign` (`campaign`),
   CONSTRAINT `links_ibfk_1` FOREIGN KEY (`campaign`) REFERENCES `campaigns` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `lists` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `cid` varchar(255) CHARACTER SET ascii NOT NULL,
@@ -187,10 +224,14 @@ CREATE TABLE `lists` (
   `description` text,
   `subscribers` int(11) unsigned DEFAULT '0',
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `public_subscribe` tinyint(1) unsigned NOT NULL DEFAULT '1',
+  `unsubscription_mode` int(11) unsigned NOT NULL DEFAULT '0',
+  `listunsubscribe_disabled` tinyint(4) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `cid` (`cid`),
   KEY `name` (`name`(191))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `queued` (
   `campaign` int(11) unsigned NOT NULL,
   `list` int(11) unsigned NOT NULL,
@@ -200,6 +241,33 @@ CREATE TABLE `queued` (
   PRIMARY KEY (`campaign`,`list`,`subscriber`),
   KEY `created` (`created`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `report_templates` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT '',
+  `mime_type` varchar(255) NOT NULL DEFAULT 'text/html',
+  `description` text,
+  `user_fields` longtext,
+  `js` longtext,
+  `hbs` longtext,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `reports` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT '',
+  `description` text,
+  `report_template` int(11) unsigned NOT NULL,
+  `params` longtext,
+  `state` int(11) unsigned NOT NULL DEFAULT '0',
+  `last_run` datetime DEFAULT NULL,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `report_template` (`report_template`),
+  CONSTRAINT `report_template_ibfk_1` FOREIGN KEY (`report_template`) REFERENCES `report_templates` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `rss` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `parent` int(11) unsigned NOT NULL,
@@ -212,6 +280,7 @@ CREATE TABLE `rss` (
   KEY `parent` (`parent`),
   CONSTRAINT `rss_ibfk_1` FOREIGN KEY (`parent`) REFERENCES `campaigns` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `segment_rules` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `segment` int(11) unsigned NOT NULL,
@@ -221,6 +290,7 @@ CREATE TABLE `segment_rules` (
   KEY `segment` (`segment`),
   CONSTRAINT `segment_rules_ibfk_1` FOREIGN KEY (`segment`) REFERENCES `segments` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `segments` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `list` int(11) unsigned NOT NULL,
@@ -229,16 +299,17 @@ CREATE TABLE `segments` (
   `created` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `list` (`list`),
-  KEY `name` (`name`(191)),
+  KEY `name` (`name`),
   CONSTRAINT `segments_ibfk_1` FOREIGN KEY (`list`) REFERENCES `lists` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `settings` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `key` varchar(255) CHARACTER SET ascii NOT NULL DEFAULT '',
   `value` text NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `key` (`key`)
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8mb4;
 INSERT INTO `settings` (`id`, `key`, `value`) VALUES (1,'smtp_hostname','smtp-pulse.com');
 INSERT INTO `settings` (`id`, `key`, `value`) VALUES (2,'smtp_port','465');
 INSERT INTO `settings` (`id`, `key`, `value`) VALUES (3,'smtp_encryption','TLS');
@@ -255,7 +326,9 @@ INSERT INTO `settings` (`id`, `key`, `value`) VALUES (13,'default_from','My Awes
 INSERT INTO `settings` (`id`, `key`, `value`) VALUES (14,'default_address','admin@example.com');
 INSERT INTO `settings` (`id`, `key`, `value`) VALUES (15,'default_subject','Test message');
 INSERT INTO `settings` (`id`, `key`, `value`) VALUES (16,'default_homepage','http://localhost:3000/');
-INSERT INTO `settings` (`id`, `key`, `value`) VALUES (17,'db_schema_version','24');
+INSERT INTO `settings` (`id`, `key`, `value`) VALUES (17,'db_schema_version','34');
+INSERT INTO `settings` (`id`, `key`, `value`) VALUES (48,'x_mailer','Mailtrain Mailer (+https://mailtrain.org)');
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `subscription` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `cid` varchar(255) CHARACTER SET ascii NOT NULL,
@@ -284,6 +357,7 @@ CREATE TABLE `subscription` (
   KEY `latest_click` (`latest_click`),
   KEY `created` (`created`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `templates` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',
@@ -296,18 +370,22 @@ CREATE TABLE `templates` (
   PRIMARY KEY (`id`),
   KEY `name` (`name`(191))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `trigger` (
   `list` int(11) unsigned NOT NULL,
+  `segment` int(11) unsigned NOT NULL,
   `subscription` int(11) unsigned NOT NULL,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`list`,`subscription`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `triggers` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',
   `description` text,
   `enabled` tinyint(4) unsigned NOT NULL DEFAULT '1',
   `list` int(11) unsigned NOT NULL,
+  `segment` int(11) unsigned NOT NULL,
   `source_campaign` int(11) unsigned DEFAULT NULL,
   `rule` varchar(255) CHARACTER SET ascii NOT NULL DEFAULT 'column',
   `column` varchar(255) CHARACTER SET ascii DEFAULT NULL,
@@ -326,11 +404,13 @@ CREATE TABLE `triggers` (
   KEY `last_check` (`last_check`),
   CONSTRAINT `triggers_ibfk_1` FOREIGN KEY (`list`) REFERENCES `lists` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `tzoffset` (
   `tz` varchar(100) NOT NULL DEFAULT '',
   `offset` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`tz`)
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `users` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(255) NOT NULL DEFAULT '',
@@ -348,6 +428,3 @@ CREATE TABLE `users` (
   KEY `token_index` (`access_token`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 INSERT INTO `users` (`id`, `username`, `password`, `email`, `access_token`, `reset_token`, `reset_expire`, `created`) VALUES (1,'admin','$2a$10$mzKU71G62evnGB2PvQA4k..Wf9jASk.c7a8zRMHh6qQVjYJ2r/g/K','admin@example.com',NULL,NULL,NULL,NOW());
-
-SET UNIQUE_CHECKS=1;
-SET FOREIGN_KEY_CHECKS=1;

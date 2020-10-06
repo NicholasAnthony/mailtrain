@@ -10,11 +10,11 @@
     <meta name="author" content="Andris Reinman">
     <link rel="icon" href="/favicon.ico">
 
-    <title>Mailtrain
+    <title>Raven :: Content Generated Email Marketing by Zumby
         {{#if title}} | {{title}}{{/if}}
     </title>
-
-    <link rel="stylesheet" href="/bootstrap/themes/united.min.css">
+    
+    <link rel="stylesheet" href="/bootstrap/themes/custom.min.css">
     <link rel="stylesheet" href="/datatables/datatables.min.css">
 
     <link rel="stylesheet" href="/datepicker/css/bootstrap-datepicker3.css">
@@ -47,7 +47,9 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/"><i class="glyphicon glyphicon-envelope"></i> Mailtrain</a>
+                <a class="navbar-brand" href="/">
+                    <img class="mt-logo" src="/logo-full.svg" style="height: 25px" />
+                </a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -60,8 +62,8 @@
                             <li><a href="{{url}}">{{title}}</a></li>
                         {{/if}}
                     {{/each}}
-                    <li><a href="https://github.com/Mailtrain-org/mailtrain/wiki"><span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span> {{#translate}}Wiki{{/translate}}</a></li>
-                    <li><a href="https://mailtrain.wordpress.com/"><span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span> {{#translate}}Blog{{/translate}}</a></li>
+                    {{!-- <li><a href="https://github.com/Mailtrain-org/mailtrain/wiki"><span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span> {{#translate}}Wiki{{/translate}}</a></li>
+                    <li><a href="https://mailtrain.wordpress.com/"><span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span> {{#translate}}Blog{{/translate}}</a></li> --}}
                 </ul>
 
                 {{#if user }}
@@ -120,18 +122,21 @@
     <!-- Main jumbotron for a primary marketing message or call to action -->
 
     {{#if indexPage}}
-        <div class="jumbotron">
+        <div class="jumbotron" style="background:#ccc-XXXX;">
             <div class="container">
                 <div class="pull-right col-md-4">
                     {{{shoutout}}}
                 </div>
 
-                <h1><img class="img-responsive" src="/mailtrain-header.png"></h1>
-                <p>{{#translate}}Self Hosted Newsletter App Built on Top of Nodemailer{{/translate}}</p>
+                <h1><img class="img-responsive" src="/logo-full.svg" style="height:60px;"></h1>
+                <p>Monetize your content through targeted email campaigns.</p>
+                {{!-- <p>{{#translate}}Self Hosted Newsletter App Built on Top of Nodemailer{{/translate}}</p> --}}
                 <p>
-                    <a class="btn btn-info btn-md" href="https://github.com/Mailtrain-org/mailtrain" role="button"><span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span> {{#translate}}Source on GitHub{{/translate}}</a>
+                    {{!-- <a class="btn btn-info btn-md" href="https://github.com/Mailtrain-org/mailtrain" role="button"><span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span> {{#translate}}Source on GitHub{{/translate}}</a> --}}
 
-                    <a class="btn btn-success btn-md" href="http://mailtrain.org/subscription/EysIv8sAx" role="button"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{#translate}}Subscribe to Our Newsletter{{/translate}}</a>
+                    {{!-- <a class="btn btn-success btn-md" href="http://mailtrain.org/subscription/EysIv8sAx" role="button"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{#translate}}Subscribe to Our Newsletter{{/translate}}</a> --}}
+                    
+                    <a class="btn btn-primary btn-large" href="/" role="button"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{#translate}}How's it work?{{/translate}}</a>
                 </p>
                 <div class="clearfix"></div>
 

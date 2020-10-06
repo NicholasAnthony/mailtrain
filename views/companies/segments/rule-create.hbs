@@ -1,0 +1,34 @@
+<ol class="breadcrumb">
+    <li><a href="/">{{#translate}}Home{{/translate}}</a></li>
+    <li><a href="/companies/">{{#translate}}Companies{{/translate}}</a></li>
+    <li><a href="/companies/view/{{company.id}}">{{company.name}}</a></li>
+    <li><a href="/segments/{{company.id}}">{{#translate}}Segments{{/translate}}</a></li>
+    <li><a href="/segments/{{company.id}}/view/{{id}}">{{name}}</a></li>
+    <li class="active">{{#translate}}Create Segment{{/translate}}</li>
+</ol>
+
+<h2>{{company.name}} <small>{{#translate}}Create Rule{{/translate}}</small></h2>
+
+<hr>
+
+<form class="form-horizontal" method="post" action="/segments/{{company.id}}/rules/{{id}}/next">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+
+    <div class="form-group">
+        <label for="column" class="col-sm-2 control-label">{{#translate}}Rule{{/translate}}</label>
+        <div class="col-sm-10">
+            <select id="column" class="form-control" name="column" required>
+                <option value=""> –– {{#translate}}Select{{/translate}} ––</option>
+                {{#each columns}}
+                    <option value="{{column}}" {{#if selected}} selected {{/if}}>{{name}}</option>
+                {{/each}}
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span> {{#translate}}Next{{/translate}}</button>
+        </div>
+    </div>
+</form>
